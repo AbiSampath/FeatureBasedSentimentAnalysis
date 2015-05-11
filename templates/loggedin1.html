@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+<head>
+{% load staticfiles %}
+<link rel="stylesheet" href="{%static 'css/style.css'%}">
+    
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{%static 'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css'%}">
+    <script src="{%static 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'%}"></script>
+    <script src="{%static 'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'%}"></script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Login- Mobile Sentiment</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{%static 'css/bootstrap.min.css'%}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{%static 'css/business-casual.css'%}" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="{%static 'http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'%}" rel="stylesheet" type="text/css">
+    <link href="{%static 'http://fonts.googleapis.com/css?family=Josefin+Slab:100,300,400,600,700,100italic,300italic,400italic,600italic,700italic'%}" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+
+
+<body>
+<div class="brand">Mobile Sentiment</div>
+    <div class="address-bar">We provide feature based sentiment analysis</div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- navbar-brand is hidden on larger screens, but visible when the menu is collapsed -->
+                <a class="navbar-brand" href="index.html">Mobile Sentiment</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="/accounts/index/">Home</a>
+                    </li>
+                    <li>
+                        <a href="/accounts/about/">About</a>
+                    </li>
+                    <li>
+                        <a href="/accounts/architecture/">Architecture</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/accounts/register/">SignUp</a>
+                    </li>
+                    <li>
+                        <a href="/accounts/login/">Login</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+<div class="container">
+
+        <div class="row">
+            <div class="box">
+                <div class="col-lg-12">
+                <p align="right"> Welcome <strong>{{full_name}}</strong>!!!</p>
+                    <hr>
+                    <h2 class="intro-text text-center">Find
+                        <strong>Sentiment</strong>
+                        
+                    </h2>
+                    <hr>
+
+{% block content %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<form onsubmit="return false;">
+{% csrf_token %}
+{{ form.errors }}
+{{ form.non_field_errors }}
+<label>Select a product:</label>
+<select id="product_selection" name="product_selection">
+	<option selected="select" disabled>--select one--</option>>
+	<option value="Iphone">Iphone</option>
+	<option value="Samsung">Samsung</option>
+	<option value="Motorola">Motorola</option>
+	<option value="Blackberry">Blackberry</option>
+	<option value="Nokia">Nokia</option>
+</select>
+<br/>
+<label>Select a feature:</label>
+	<select id="feature_selection" name="feature_selection">
+		<option selected="select" disabled>--select one--</option>>
+		<option value="Camera">Camera</option>
+		<option value="Wifi">Wifi</option>
+		<option value="ScreenSize">ScreenSize</option>
+		<option value="Memory">Memory</option>
+		<option value="Battery">Battery</option>
+	</select><br/>
+<button id="submit" class="btn btn-default btn-lg" onclick="postProducts_and_Features()">Select</button>
+</form><br/>
+<div id = "output">
+<p>People of your age have also viewed: </p>
+<table class="table table-striped table-bordered table-hover table-condensed">
+        <tr>
+            <th>Product</th>
+            <th>Feature</th>
+        </tr>
+        {% for row in rows %}
+        <tr>
+                <td>{{row.0}}</td><td> {{row.1}}</td>
+        </tr>
+        {% endfor %}
+</table>
+</div><br/>
+<script>
+	function postProducts_and_Features() {
+		$.ajax({
+			type: "POST",
+			url:"/accounts/product/",
+			dataType: "json",
+			async: true,
+			data: {
+				csrfmiddlewaretoken: '{{csrf_token}}',
+				product_selection: $('#product_selection').val(),
+				feature_selection: $('#feature_selection').val()
+			},
+			success:function(data) {
+				alert("You have selected \nProduct: "+data.message1+ "\nFeature: "+data.message2)
+			},
+			error:function(data) {
+				alert("error:"+data.message)
+			},
+		});
+	}
+
+</script>
+
+<p><a href="/accounts/logout/" class="btn btn-default btn-lg"> Logout </a> </p>
+
+{% endblock %}
+</div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container -->
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>Copyright &copy; CMPE295B 2015</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="{%static 'js/jquery.js'%}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{%static 'js/bootstrap.min.js'%}"></script>
+</body>
+</html>

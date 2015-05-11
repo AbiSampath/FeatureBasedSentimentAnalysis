@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load staticfiles %}
+    <title>Mobile Sentiment- LoggedIn</title>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- CSS 
+        ================================================== -->
+    <!-- Bootstrap 3-->
+    <link href="{%static 'css/bootstrap.min.css'%}" rel="stylesheet" media="screen">
+    <link href="{%static 'css/sb-admin.css'%}" rel="stylesheet" media="screen">
+    <!-- Google Fonts -->
+    <link href="{%static 'http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic|Roboto+Condensed:300italic,400italic,700italic,400,300,700'%}" rel='stylesheet' type='text/css'>
+    <link href="{%static 'http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700' %}" rel='stylesheet' type='text/css'>
+    <!-- Template Styles -->
+    <link href="{%static 'css/style.css'%}" rel="stylesheet" media="screen">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://rawgit.com/emeeks/3361332/raw/61cf57523fe8cf314333e5f60cc266351fec2017/d3.layout.cloud.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // Handler for .ready() called.
+        $('html, body').animate({
+            scrollTop: $('#headDiv').offset().top
+        }, 'slow');
+    });
+
+    var p = JSON.parse("{{prodFeature|escapejs}}");
+    var q = JSON.parse("{{urls|escapejs}}");
+
+    function loadImages() {
+        if (q[0] == undefined) {
+            document.getElementById("similar").innerHTML = "";
+            document.getElementById("similarimages").innerHTML = "";
+            return;
+        }
+
+        $("#first").attr("src", q[0]);
+        $("#second").attr("src", q[1]);
+        $("#third").attr("src", q[2]);
+        $("#fourth").attr("src", q[3]);
+        $("#fifth").attr("src", q[4]);
+        $("#sixth").attr("src",q[5]);
+        document.getElementById("l1").innerHTML = p[0];
+        document.getElementById("l2").innerHTML = p[1];
+        document.getElementById("l3").innerHTML = p[2];
+        document.getElementById("l4").innerHTML = p[3];
+        document.getElementById("l5").innerHTML = p[4];
+        document.getElementById("l6").innerHTML = p[5];
+
+        var proddata = JSON.parse("{{rows|escapejs}}");
+
+        console.log(p);
+        console.log(q);
+        var sortedProd = proddata.sort(function(a, b) {
+            return parseInt(b.count) - parseInt(a.count)
+        });
+        console.log(sortedProd);
+
+        // $.each(sortedProd, function (idx, obj) {
+        //                	var arrKey=new Array();
+        // 				$.each(obj,function(key,value){
+        // 					res=obj['product'].concat("-").concat(obj['feature']);
+        // 					count=obj['count'];
+
+        // 				});
+        // 				arrKey.push(res,count);
+        // 					//arrVal.push(count);
+        // 					//console.log(arrKey);
+        // 				 jsonObjKey.push(arrKey);	
+        // 				//alert(jsonObj);
+        //                    });
+
+        //console.log(JSON.stringify(sortedProd));
+    }
+    </script>
+    <script type="text/javascript">
+
+    </script>
+</head>
+
+<body onload="loadImages()">    
+    <!-- NAVBAR
+	      ================================================== -->
+    <nav class="navbar navbar-default navbar-fixed-top" style="widths:50px;" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--Replace text with your app name or logo image-->
+                <a class="navbar-brand" href="#">MineMinds</a>
+            </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+                <ul class="nav navbar-nav">
+                    <li style="text-transform:capitalize;"><a>Hi {{full_name}}</a></li>
+                    <li><a href="../home">Logout</a></li>
+                    <!--                     <li><a onclick="$('.features').animatescroll({padding:71});">Section4</a></li>
+                    <li><a onclick="$('.social').animatescroll({padding:71});">Section5</a></li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- HEADER
+	   ================================================== -->
+    <header id="headDiv">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                   <!--  <h1 style="color:#F5FFFA">Welcome!</h1> -->
+                   
+                </div>
+                <div class="container">
+                    <!--  <nav style="display:none;">
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                 <li class="active">
+                        <a onclick=" $(window).scrollTop($(this).position().top - $('header').height())"><i class="fa fa-fw fa-dashboard"></i> Search</a>
+                    </li>
+                    <li class="active">
+                        <a onclick="$('.sec1').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Sentiment</a>
+                    </li>
+                    <li>
+                        <a onclick="$('.sec2').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Feature</a>
+                    </li>
+                    <li>
+                        <a onclick="$('.sec3').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Positive</a>
+                    </li>
+                    <li>
+                        <a onclick="$('.sec4').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Negative</a>
+                    </li>
+                    <li>
+                        <a onclick="$('.sec5').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Recommendation</a>
+                    </li>
+                    
+                        </ul>
+                    </li>
+                   
+                </ul>
+            </div>
+            </nav> -->
+                    <div class="row">
+                    <br>
+                    <br>
+                        <form onsubmit="return false;">
+                            <!--dropdown-->
+                            {% csrf_token %} {{ form.errors }} {{ form.non_field_errors }}
+                            <!-- Our Special dropdown has class show-on-hover -->
+                            <div class="btn-group show-on-hover">
+                                <label style="color:#4372AA;">Choose a Product</label>
+                                
+                                <input list="products" id="product" />
+                                <datalist id="products">
+                                    <option value="Iphone6" data-xyz="Iphone6">                                            
+                                                <option value="Samsung Galaxy S6" data-xyz="Samsung Galaxy S6">
+                                                    <option value="HTC Desire One" data-xyz="HTC Desire One">
+                                                    <option value="OnePlus One" data-xyz="OnePlus One">
+                                </datalist>
+                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                <label style="color:#4372AA;">Choose a Feature</label>
+                                <input list="features" id="feature" />
+                                <datalist id="features">
+                                    <option value="Camera" data-xyz="Camera">
+                                        <option value="Battery" data-xyz="Battery">
+                                            <option value="Display" data-xyz="Display">
+                                                <option value="NFC" data-xyz="NFC">
+                                                    <option value="Sensor" data-xyz="Sensor">
+                                                        <option value="Screensize" data-xyz="Screensize">
+                                </datalist>
+                                <br>
+                                <br>
+                                <br>
+                                <button style="background:#4372AA;color:white; width:100px;right:250px;position:absolute;" id="submit" onclick="clickMe()">Select</button>
+                            </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                 <p style="color:#4372AA;font-size:2em;"class="lead" id="similar">People of your age have also viewed:
+                <!--dropdown-->
+                <!-- Start of carousel -->
+                <div class="container" id="similarimages">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div id="Carousel"  style="left:300px; position:absolute; ">
+                                <!-- Carousel items -->
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <a href="#" class="thumbnail"><img id="first" alt="Image" style="max-width:100%;height:120px;"></a>
+                                                <label style="color:#4372AA;" id="l1"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a href="#" class="thumbnail"><img id="second" alt="Image" style="max-width:100%;height:120px;"></a>
+                                                <label style="color:#4372AA;" id="l2"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a href="#" class="thumbnail"><img id="third" alt="Image" style="max-width:100%;height:120px;"></a>
+                                                <label style="color:#4372AA;" id="l3"></label>
+                                            </div>
+                                        </div>
+                                        <!--.row-->
+                                    </div>
+                                    <!--.item-->
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <a href="#" class="thumbnail"><img id="fourth" alt="Image" style="max-width:100%;height:120px;"></a>
+                                                <label style="color:#4372AA;" id="l4"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a href="#" class="thumbnail"><img id="fifth" alt="Image" style="max-width:100%;height:120px;"></a>
+                                                <label style="color:#4372AA;" id="l5"></label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a href="#" class="thumbnail"><img id="sixth" alt="Image" style="max-width:100%;height:120px;"></a>
+                                                <label style="color:#4372AA;" id="l6"></label>
+                                            </div>
+                                        </div>
+                                        <!--.row-->
+                                    </div>
+                                    <!--.item-->
+                                    <!--.item-->
+                                </div>
+                                <!--.carousel-inner-->
+                                <a data-slide="prev" href="#Carousel" class="left carousel-control">‹</a>
+                                <a data-slide="next" href="#Carousel" class="right carousel-control">›</a>
+                            </div>
+                            <!--.Carousel-->
+                        </div>
+                    </div>
+                </div>
+                </p>
+                <!--.container-->
+                <!-- end of carousel -->
+            </div>
+        </div>
+    </header>
+    <!-- PURCHASE
+	      ================================================== -->
+    <section class="sec1">
+        <div class="container">
+            <!--  <nav class="vertical">
+    <ul>
+      <li>
+        <a href="#">Home</a>
+	  </li>
+	   <li>
+        <a href="#">Blog</a>
+	  </li>
+	   <li>
+        <a href="#">Work</a>
+	  </li>
+	</ul>
+</nav> -->
+            <div class="row">
+                <div class="col-md-9">
+                    <!--dropdown snippet start-->
+                    <div class="container">
+                        <div class="row">
+                     <h2 id="c1" style="top:-25px;width:1250px;position:absolute;color:#4372AA"></h2>
+                     <br>
+                    <div style="left:300px;top:30px;position:absolute;" id="hChart"></div>
+                            <script type="text/javascript">
+                            google.load('visualization', '1', {
+                                packages: ['corechart', 'bar']
+                            });
+                            google.setOnLoadCallback(drawBasic);
+
+                            function drawBasic() {
+                                //alert("HI");
+                                var proddata = JSON.parse("{{rows|escapejs}}");
+
+
+                                
+
+                                // var items={}
+
+                                var jsonObjKey = new Array();
+                                var jsonObjVal = [];
+                                var res;
+                                var count;
+                                var arrVal = [];
+                                console.log(proddata);
+                                //           // var arr=[];
+                                $.each(proddata, function(idx, obj) {
+                                    var arrKey = new Array();
+                                    //console.log();
+                                    $.each(obj, function(key, value) {
+
+                                        res = obj['product'].concat("-").concat(obj['feature']);
+                                        count = obj['count'];
+
+                                    });
+                                    arrKey.push(res, count);
+                                    //arrVal.push(count);
+                                    //console.log(arrKey);
+                                    jsonObjKey.push(arrKey);
+                                    //alert(jsonObj);
+                                });
+
+                                //jsonObjVal.push(arrVal);
+
+                                //console.log(jsonObjKey);
+                                // console.log(jsonObjVal);
+                                // alert()
+                                // for(int i=0;i<jsonObj.length; i++) {
+                                // 	alert(jsonObj[i]);
+                                // }
+
+                                //  var jsonArr=[];
+                                // //  for(var i in geodata) {
+                                // //    arr
+                                // //  }
+
+                                // for(int i=0; i<geodata.length; i++) {
+                                // 	geodata[i];
+                                // }
+
+                                var data = new google.visualization.DataTable();
+                                data.addColumn('string', 'Product');
+                                data.addColumn('number', 'Factor');
+                                data.addRows(jsonObjKey);
+
+                                var options = {
+                                    title: 'Product features viewed',
+                                    hAxis: {
+                                        title: 'Product-Feature',
+
+                                    },
+
+                                    vAxis: {
+                                        title: 'Number of people',
+                                        textStyle: {
+                                            fontSize: 8
+                                        }
+                                    }
+                                };
+
+                                var chart = new google.visualization.BarChart(
+                                    document.getElementById('output'));
+
+                                chart.draw(data, options);
+                            }
+                            </script>
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+    </section>
+    <script type="text/javascript">
+    google.load("visualization", "1", {
+        packages: ["corechart"]
+    });
+    </script>
+    <!--   //alert(JSON.stringify(json));
+                    // google.setOnLoadCallback(drawChart);
+                    function drawChart2(json) {
+
+                        pos = json.pos;
+                        neg = json.neg;
+                        neutral = json.neutral;
+
+
+
+                        var data = google.visualization.arrayToDataTable([
+                            ['Task', 'Sentiment'],
+                            ['Positive', pos],
+                            ['Negative', neg],
+                            ['Neutral', neutral],
+                        ]);
+
+                        var options = {
+                            title: 'Sentiment'
+                        };
+
+                        var chart = new google.visualization.PieChart(document.getElementById('chart2'));
+
+                        chart.draw(data, options);
+                    }
+                     -->
+    </div>
+    <script type="text/javascript">
+    function drawChart123(json) {
+
+
+        // alert("In");
+        // var arr = [];
+        // for (var i in data) {
+        //     arr.push([i, data[i]]);
+        // }
+
+        pos = json.pos;
+        neg = json.neg;
+        neutral = json.neutral;
+
+        console.log(pos);
+        console.log(neg);
+        console.log(neutral);
+
+        avg = (pos + neg + neutral)/3;
+        posNew = ((pos / avg) * 100);
+        negNew = ((neg / avg) *100);
+        neutralNew = ((neutral /avg) * 300);
+
+
+        $('#hChart').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: '',
+
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    size:310,
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'blue'
+                        }
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+
+            series: [{
+                type: 'pie',
+                name: 'Sentiment',
+                data: [
+                    ['Positive', posNew],
+                    ['Negative', negNew],
+                    ['Neutral', neutralNew]
+
+                ]
+            }]
+        });
+    }
+    </script>
+    <script type="text/javascript">
+    function drawChart(v1, v2) {
+
+            $(function() {
+                $('#piechart').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+
+                    xAxis: {
+                        categories: ['Sentiment'],
+                        title: {
+                            text: null
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'No of Reviews',
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: ''
+                    },
+                    plotOptions: {
+                        column: {
+                            dataLabels: {
+                                enabled: true
+                            }
+                        }
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'top',
+                        x: 10,
+                        y: 100,
+                        floating: false,
+                        borderWidth: 1,
+                        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'white'),
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Positive',
+                        data: [v2]
+                    }, {
+                        name: 'Negative',
+                        data: [v1]
+                    }]
+                });
+            });
+
+        }
+        // alert(v1);
+        // alert("In");
+        // var arr = [];
+        // for (var i in data) {
+        //     arr.push([i, data[i]]);
+        // }
+    </script>
+    <script type="text/javascript">
+    function wcloud(data) {
+
+        var items;
+
+        var keyArray = [];
+        var countArray = [];
+
+
+        $.each(data, function(key, val) {
+
+            item = {}
+            item['Sentiment'] = key;
+            item['Factor'] = val;
+
+
+            keyArray.push(key);
+            countArray.push(val);
+
+        });
+
+
+        var fill = d3.scale.category20();
+
+
+
+
+           d3.layout.cloud().size([800, 300])
+            .words(d3.zip(keyArray, countArray).map(function(d) {
+                return {
+                    text: d[0],
+                    size: d[1] * 2
+                };
+            }))
+            .padding(5)
+            .rotate(function() {
+                return ~~(Math.random() * 2) * 90;
+            })
+            .font("Impact")
+            .fontSize(function(d) {
+                return d.size;
+            })
+            .on("end", draw)
+            .start();
+
+        function draw(words) {
+
+            d3.select("#cloud2 svg").remove();
+
+            d3.select(document.getElementById('cloud2')).append("svg")
+                .attr("width", 1000)
+                .attr("height", 600)
+                .append("g")
+                .attr("transform", "translate(350,200)")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function(d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Impact")
+                .style("fill", function(d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function(d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function(d) {
+                    return d.text;
+                });
+        }
+
+
+    }
+    </script>
+    </div>
+    <script type="text/javascript">
+    var obj = {}
+
+
+    function processJSON(data) {
+
+        var negCount = 0;
+
+        var keyArray1 = [];
+        var countArray1 = [];
+
+
+
+        $.each(data, function(key, val) {
+
+            // item = {}
+            // item['Sentiment'] = key;
+            // item['Factor'] = val;
+
+            // alert(key);
+            keyArray1.push(key);
+            countArray1.push(val);
+
+
+        });
+
+        $.each(countArray1, function() {
+            negCount += this;
+        });
+        return negCount;
+    }
+
+    function processJSON2(data) {
+
+        var posCount = 0;
+
+        var keyArray1 = [];
+        var countArray1 = [];
+
+
+
+        $.each(data, function(key, val) {
+
+            // item = {}
+            // item['Sentiment'] = key;
+            // item['Factor'] = val;
+
+            // alert(key);
+            keyArray1.push(key);
+            countArray1.push(val);
+
+
+        });
+
+        $.each(countArray1, function() {
+            posCount += this;
+        });
+        return posCount;
+    }
+
+    function clickMe() {
+
+                var val = $('#product').val()
+        var xyz = $('#products option').filter(function() {
+            return this.value == val;
+        }).data('xyz');
+        //alert(xyz);
+
+        var val1 = $('#feature').val()
+        var xyz1 = $('#features option').filter(function() {
+            return this.value == val1;
+        }).data('xyz');
+
+        var prod="Overall Sentiment of ";
+        var prodIn=prod.concat(xyz);
+        $("#c1").html(prodIn);
+
+        var feature1="Sentiment of ";
+        var conn=" in ";
+        var featureIn=feature1.concat(xyz1,conn,xyz);
+        $("#c2").html(featureIn);
+
+        var posText="Positive reviews about ";
+        var posIn=posText.concat(xyz1,conn,xyz);
+        $("#c3").html(posIn);
+
+        var negText="Negative reviews about ";
+        var negIn=negText.concat(xyz1,conn,xyz);
+        $("#c4").html(negIn);
+
+
+        $('.sec1').animatescroll({
+            padding: 0
+        });
+
+
+
+        var obj = {};
+        $.when($.ajax({
+            url: "abi/",
+            type: "GET",
+            data: {
+                product: xyz,
+                feature: xyz1
+            },
+            success: function(json) {
+
+                //alert("Hi");
+
+                wcloud(json);
+                obj.pos = processJSON(json);
+
+
+
+            }
+
+
+        }), $.ajax({
+            url: "getSentiment/",
+            type: "GET",
+            data: {
+                product: xyz,
+                feature: xyz1
+            },
+            success: function(json1) {
+
+                //alert(JSON.stringify(json));
+                wcloud2(json1);
+                obj.neg = processJSON2(json1);
+
+            }
+
+        }), $.ajax({
+            url: "overall/",
+            type: "GET",
+            data: {
+                product: xyz,
+               
+
+            },
+            success: function(json1) {
+
+                // alert(json1);
+
+                drawChart123(json1);
+
+            }
+
+        })).then(function() {
+
+
+            drawChart(obj.pos, obj.neg);
+        });
+
+
+        $.ajax({
+            type: "POST",
+            url: "/accounts/product/",
+            dataType: "json",
+            async: true,
+            data: {
+                csrfmiddlewaretoken: '{{csrf_token}}',
+                product_selection: xyz,
+                feature_selection: xyz1
+            },
+            success: function(data) {
+                // alert("You have selected \nProduct: " + data.message1 + "\nFeature: " + data.message2)
+            },
+            error: function(data) {
+                alert("error:" + data.message)
+            },
+        });
+
+
+    }
+    </script>
+    <script type="text/javascript">
+    function m() {
+        var a = 1;
+        var b = 2;
+        var sum = a + b;
+        return;
+    }
+
+
+    function wcloud2(data1) {
+
+
+
+        var keyArray1 = [];
+        var countArray1 = [];
+
+
+        $.each(data1, function(key, val) {
+
+            // item = {}
+            // item['Sentiment'] = key;
+            // item['Factor'] = val;
+
+            // alert(key);
+            keyArray1.push(key);
+            countArray1.push(val);
+
+        });
+
+
+        var fill = d3.scale.category20();
+
+
+
+
+        d3.layout.cloud().size([800, 300])
+            .words(d3.zip(keyArray1, countArray1).map(function(d) {
+                return {
+                    text: d[0],
+                    size: d[1] * 1
+                };
+            }))
+
+        .padding(5)
+            .rotate(function() {
+                return ~~(Math.random() * 2) * 90;
+            })
+            .font("Impact")
+            .fontSize(function(d) {
+                return d.size;
+            })
+            .on("end", draw2)
+            .start();
+
+        function draw2(words) {
+            d3.select("#cloud1 svg").remove();
+
+            d3.select(document.getElementById('cloud1')).append("svg")
+                .attr("width", 1000)
+                .attr("height", 600)
+                .append("g")
+                .attr("transform", "translate(400,200)")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function(d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Impact")
+                .style("fill", function(d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function(d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function(d) {
+                    return d.text;
+                });
+        }
+
+
+    }
+    </script>
+    <!-- PAYOFF 
+	      ================================================== -->
+    <section class="sec2">
+        <div class="container">
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <nav>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav side-nav">
+                        <li class="active">
+                            <a onclick=" $(window).scrollTop($(this).position().top - $('header').height())"><i class="fa fa-fw fa-dashboard"></i> Search</a>
+                        </li>
+                        <li class="active">
+                            <a onclick="$('.sec1').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Sentiment</a>
+                        </li>
+                        <li>
+                            <a onclick="$('.sec2').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Feature Sentiment</a>
+                        </li>
+                        <li>
+                            <a onclick="$('.sec3').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Positive Reviews</a>
+                        </li>
+                        <li>
+                            <a onclick="$('.sec4').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> Negative Reviews</a>
+                        </li>
+                        <li>
+                            <a onclick="$('.sec5').animatescroll({padding:0});"><i class="fa fa-fw fa-dashboard"></i> User Interests</a>
+                        </li>
+                    </ul>
+                    </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- /.navbar-collapse -->
+            <div class="row">
+                <div class="col-md-9">
+                 <h2 id="c2" style="top:-100px;width:1400px;position:absolute;color:#4372AA"></h2>
+                    <div id="piechart" style="width:800px;height:300px;left:300px;position:absolute;"> </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- DETAILS 
+	      ================================================== -->
+    <section class="sec3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <h2 id="c3"style="width:1400px;top:-20px;position:absolute;color:#4372AA"></h2>
+                    <br>
+                    <br>
+                    <div style="left:300px;top:20px;position:absolute;" id="cloud1"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FEATURES
+	      ================================================== -->
+    <section class="sec4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <h2 id="c4" style="width:1400px;top:-20px;position:absolute;color:#4372AA"></h2>
+                    <div style="left:300px;top:20px;position:absolute;" id="cloud2"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- SOCIAL
+	     ================================================== -->
+    <section class="sec5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div style="left:200px;right:50px;position:absolute;" id="output"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- GET IT 
+	     ================================================== -->
+    <section class="get-it">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                   
+                    <p>Copyright &copy; CMPE295B 2015</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- JAVASCRIPT
+	     ================================================== -->
+    <script src="{%static 'js/bootstrap.min.js'%}"></script>
+    <script src="{%static 'js/animatescroll.js'%}"></script>
+    <script src="{%static 'js/scripts.js'%}"></script>
+    <script src="{%static 'js/retina-1.1.0.min.js'%}"></script>
+
+</html>
